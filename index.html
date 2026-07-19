@@ -65,4 +65,81 @@ button:hover{background:#00cc66}
 
 <script>
 let API_KEY = localStorage.getItem("groq_key");
-if(!
+if(!API_KEY){ 
+  API_KEY = prompt("Apni Groq Key yahan paste karo:\ngsk_..."); 
+  localStorage.setItem("groq_key", API_KEY); 
+}
+const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+const IMAGE_URL = "https://pollinations.ai/p/";
+
+setTimeout(()=>{
+  document.getElementById("loading").style.display="none";
+  showScreen("loginScreen");
+},2000);
+
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function login(){
+  let u=document.getElementById("username").value;
+  let p=document.getElementById("password").value;
+  if(u=="user" && p=="1234"){ showScreen("dashboardScreen"); }
+  else{ alert("Wrong! Demo: user / 1234"); }
+}
+
+function logout(){ showScreen("loginScreen"); }
+
+function pay(){
+  alert("Payment Successful! Pro Activated");
+  showScreen("dashboardScreen");
+}
+
+async function sendMessage(){
+  const input=document.getElementById("userInput");
+  const msg=input.value.trim();
+  if(!msg) return;
+  addMsg(msg,"user");
+  input.value="";
+  
+  if(msg.toLowerCase().startsWith("image of")){
+    let prompt=msg.replace("image of","").trim();
+    addMsg(`Image bana raha hun: ${prompt}`,"bot");
+    let img=document.createElement("img");
+    img.src=IMAGE_URL+encodeURIComponent(prompt);
+    img.style="width:100%;border-radius:10px;margin-top:5px";
+    document.getElementById("chatBox").appendChild(img);
+    return;
+  }
+  
+  addMsg("Soch raha hun...","bot");
+  try{
+    let res=await fetch(GROQ_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":`Bearer ${API_KEY}`},
+      body:JSON.stringify({model:"llama3-8b-8192",messages:[{role:"user",content:msg}]})
+    });
+    let data=await res.json();
+    document.querySelector("#chatBox.bot:last-child").remove();
+    addMsg(data.choices[0].message.content,"bot");
+  }catch(e){
+    document.querySelector("#chatBox.bot:last-child").remove();
+    addMsg("Error aa gaya bro. Key check karo","bot");
+  }
+}
+
+function addMsg(text,type){
+  let div=document.createElement("div");
+  div.className=`msg ${type}`;
+  div.innerText=text;
+  document.getElementById("chatBox").appendChild(div);
+  document.getElementById("chatBox").scrollTop=chatBox.scrollHeight;
+}
+
+document.getElementById("userInput").addEventListener("keypress", e => {
+  if (e.key === "Enter") sendMessage();
+});
+</script>
+</body>
+  </html>
