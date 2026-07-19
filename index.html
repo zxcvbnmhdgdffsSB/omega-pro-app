@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#6a11cb">
-  <title>Omega-Pro</title>
+  <title>Omega-Pro AI</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -14,12 +14,12 @@
       min-height: 100vh;
       padding: 20px;
     }
-    .page { display: none; text-align: center; }
-    .active { display: block; }
-    .logo { font-size: 80px; margin: 20px 0; }
+ .page { display: none; text-align: center; }
+ .active { display: block; }
+ .logo { font-size: 80px; margin: 20px 0; }
     h1 { font-size: 32px; margin-bottom: 15px; }
     p { font-size: 16px; opacity: 0.9; margin-bottom: 20px; }
-    input {
+    input, textarea {
       width: 90%;
       max-width: 350px;
       padding: 14px;
@@ -42,15 +42,20 @@
       box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
     }
     button:active { transform: scale(0.95); }
-    .card {
+ .card {
       background: rgba(255,255,255,0.1);
       padding: 20px;
       border-radius: 20px;
       margin: 15px auto;
       max-width: 400px;
       backdrop-filter: blur(10px);
+      text-align: left;
     }
-    .btn-red { background: #ff4d4d; color: white; }
+ .btn-red { background: #ff4d4d; color: white; }
+ .btn-green { background: #00ff88; color: #000; }
+ .btn-purple { background: #a855f7; color: white; }
+    #aiReply, #videoStatus { white-space: pre-wrap; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; }
+    #aiImage { max-width: 100%; border-radius: 10px; margin-top: 10px; display: none; }
   </style>
 </head>
 <body>
@@ -58,8 +63,8 @@
   <!-- 1. HOME PAGE -->
   <div id="home" class="page active">
     <div class="logo">⚡</div>
-    <h1>Omega-Pro</h1>
-    <p>AI is Ready</p>
+    <h1>Omega-Pro AI</h1>
+    <p>AI + Image Generator</p>
     <button onclick="showPage('login')">Start Now</button>
   </div>
 
@@ -78,5 +83,117 @@
   <div id="dashboard" class="page">
     <h1>Welcome to Dashboard</h1>
     <p id="welcomeUser">Hello User!</p>
-    
-   
+
+    <div class="card">
+      <h2>💰 Balance: $0.00</h2>
+      <p>Your Omega-Pro Account</p>
+    </div>
+
+    <!-- AI CHAT CARD -->
+    <div class="card">
+      <h3>🤖 Omega AI Chat</h3>
+      <textarea id="aiInput" rows="3" placeholder="Poochho: BTC signal / Code / Help"></textarea>
+      <button class="btn-green" onclick="askAI()">Ask AI</button>
+      <div id="aiReply">AI ka jawab yahan aayega...</div>
+    </div>
+
+    <!-- AI IMAGE CARD -->
+    <div class="card">
+      <h3>🎨 AI Image Generator</h3>
+      <input type="text" id="videoPrompt" placeholder="Likh do: A lion running in forest">
+      <button class="btn-purple" onclick="generateImage()">Generate Image</button>
+      <p id="videoStatus">Image yahan banegi...</p>
+      <img id="aiImage" src="" alt="">
+    </div>
+
+    <div class="card">
+      <h3>🚀 Quick Actions</h3>
+      <button onclick="alert('Coming Soon!')">Deposit</button>
+      <button onclick="alert('Coming Soon!')">Withdraw</button>
+    </div>
+
+    <button class="btn-red" onclick="logout()">Logout</button>
+  </div>
+
+<script>
+  // 👇 YAHAN APNI FREE GEMINI API KEY PASTE KARO
+  const API_KEY = "AQ.Ab8RN6LKCvZWb-ffbxd5sudNlPamqwomYPSdgYkh3JJ6ivA6XQ";
+
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+  }
+
+  function login() {
+    let user = document.getElementById('user').value;
+    if(user == "") {
+      alert("Please enter username");
+      return;
+    }
+    document.getElementById('welcomeUser').innerText = "Hello " + user + "!";
+    showPage('dashboard');
+  }
+
+  function logout() {
+    document.getElementById('user').value = "";
+    document.getElementById('pass').value = "";
+    showPage('home');
+  }
+
+  async function askAI() {
+    let input = document.getElementById('aiInput').value;
+    let replyBox = document.getElementById('aiReply');
+    if(input == "") return alert("Kuch likho");
+
+    replyBox.innerText = "Soach raha hun...";
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+    const data = { contents: [{ parts: [{ text: input }] };
+
+    try {
+      let res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      let json = await res.json();
+      replyBox.innerText = json.candidates[0].content.parts[0].text;
+    } catch(e) {
+      replyBox.innerText = "Error: API Key check karo";
+    }
+  }
+
+  async function generateImage() {
+    let prompt = document.getElementById('videoPrompt').value;
+    let status = document.getElementById('videoStatus');
+    let img = document.getElementById('aiImage');
+    if(prompt == "") return alert("Prompt likho");
+
+    status.innerText = "Image bana raha hun... 10 sec";
+    img.style.display = "none";
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${API_KEY}`;
+    const data = {
+      contents: [{ parts: [{ text: "Create an image: " + prompt }] }],
+      generationConfig: { responseModalities: ["TEXT", "IMAGE"] }
+    };
+
+    try {
+      let res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      let json = await res.json();
+      let parts = json.candidates[0].content.parts;
+      for(let part of parts){
+        if(part.inlineData){
+          img.src = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+          img.style.display = "block";
+          status.innerText = "Image ready!";
+        }
+      }
+    } catch(e) {
+      status.innerText = "Error: Free quota khatam ya API key galat";
+    }
+  }
+</script>
+
+</body>
+  </html>
