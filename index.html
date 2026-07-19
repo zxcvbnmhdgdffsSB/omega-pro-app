@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Omega-Pro SUPER AI v5.0</title>
+<title>Omega-Pro SUPER AI v5.1</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
 body{background:#000;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh}
@@ -33,7 +33,7 @@ button:hover{opacity:0.8}
 
 <!-- LOGIN SCREEN -->
 <div class="screen" id="loginScreen">
-  <h1>⚡ Omega-Pro SUPER v5.0</h1>
+  <h1>⚡ Omega-Pro SUPER v5.1</h1>
   <input type="text" id="username" placeholder="Username">
   <input type="password" id="password" placeholder="Password">
   <button onclick="login()">Login</button>
@@ -61,7 +61,7 @@ button:hover{opacity:0.8}
 <!-- CHAT SCREEN - SUPER AI -->
 <div class="screen" id="chatScreen">
   <h1>⚡ Super AI Chat</h1>
-  <div class="key-area">
+  <div class="key-area" id="keyArea">
     <input type="password" id="apiKeyInput" placeholder="Apni Groq Key paste karo">
     <button onclick="saveKey()" style="width:80px;margin:0">Save</button>
   </div>
@@ -74,7 +74,6 @@ button:hover{opacity:0.8}
 
 <script>
 let API_KEY = localStorage.getItem("groq_key");
-if(API_KEY) document.getElementById("apiKeyInput").value = API_KEY;
 
 setTimeout(()=>{
   document.getElementById("loading").style.display="none";
@@ -84,6 +83,15 @@ setTimeout(()=>{
 function showScreen(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+
+  // CHAT SCREEN KHOLE TO KEY CHECK KARO
+  if(id === "chatScreen"){
+    if(API_KEY){
+      document.getElementById("keyArea").style.display = "none"; // KEY BOX GAYAB
+    } else {
+      document.getElementById("keyArea").style.display = "flex"; // KEY BOX SHOW
+    }
+  }
 }
 
 function login(){
@@ -99,18 +107,20 @@ function pay(){ alert("Payment Successful! Pro Activated ✅"); showScreen("dash
 
 function saveKey(){
   API_KEY = document.getElementById("apiKeyInput").value;
+  if(!API_KEY){ alert("Key khali hai"); return; }
   localStorage.setItem("groq_key", API_KEY);
-  alert("Key Saved Successfully!");
+  document.getElementById("keyArea").style.display = "none"; // SAVE HOTE HI GAYAB
+  alert("Key Saved Successfully! ✅");
 }
 
 async function sendMessage(){
   const input=document.getElementById("userInput");
   const msg=input.value.trim();
   if(!msg) return;
-  if(!API_KEY){ alert("Pehle upar key save karo bro"); return; }
+  if(!API_KEY){ alert("Pehle key save karo bro"); return; }
   addMsg(msg,"user");
   input.value="";
-  
+
   // IMAGE GENERATION
   if(msg.toLowerCase().startsWith("image of")){
     let prompt=msg.replace("image of","").trim();
@@ -121,7 +131,7 @@ async function sendMessage(){
     document.getElementById("chatBox").appendChild(img);
     return;
   }
-  
+
   // AI CHAT
   addMsg("🤔 Soch raha hun...","bot");
   try{
@@ -135,21 +145,4 @@ async function sendMessage(){
     addMsg(data.choices[0].message.content,"bot");
   }catch(e){
     document.querySelectorAll("#chatBox.bot:last-child").forEach(e=>e.remove());
-    addMsg("❌ Error: Key check karo ya net issue hai","bot");
-  }
-}
-
-function addMsg(text,type){
-  let div=document.createElement("div");
-  div.className=`msg ${type}`;
-  div.innerText=text;
-  document.getElementById("chatBox").appendChild(div);
-  document.getElementById("chatBox").scrollTop=chatBox.scrollHeight;
-}
-
-document.getElementById("userInput").addEventListener("keypress", e => {
-  if (e.key === "Enter") sendMessage();
-});
-</script>
-</body>
-  </html>
+    addMsg("❌ Error: Key ghalat hai ya net
