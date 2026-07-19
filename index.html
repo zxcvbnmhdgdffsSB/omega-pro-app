@@ -3,74 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Omega-Pro AI v4.0</title>
+<title>Omega-Pro SUPER AI v5.0</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
 body{background:#000;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh}
-.screen{width:100%;max-width:450px;height:90vh;background:#0a0a0a;border:2px solid #a855f7;border-radius:20px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 0 30px #a855f7}
+.screen{width:100%;max-width:480px;height:95vh;background:#0a0a0a;border:2px solid #a855f7;border-radius:20px;display:none;flex-direction:column;overflow:hidden;box-shadow:0 0 40px #a855f7}
 .screen.active{display:flex}
-h1{color:#a855f7;text-align:center;padding:20px;font-size:24px;text-shadow:0 0 10px #a855f7}
-input{width:90%;margin:10px auto;padding:12px;background:#111;border:1px solid #a855f7;border-radius:10px;color:#fff;outline:none}
-button{width:90%;margin:10px auto;padding:14px;background:#a855f7;border:none;border-radius:10px;color:#000;font-weight:bold;cursor:pointer;font-size:16px}
-button:hover{background:#9333ea}
+h1{color:#a855f7;text-align:center;padding:18px;font-size:22px;text-shadow:0 0 15px #a855f7}
+input{width:90%;margin:8px auto;padding:12px;background:#111;border:1px solid #a855f7;border-radius:10px;color:#fff;outline:none}
+button{width:90%;margin:8px auto;padding:14px;background:linear-gradient(90deg,#a855f7,#9333ea);border:none;border-radius:10px;color:#000;font-weight:bold;cursor:pointer;font-size:16px}
+button:hover{opacity:0.8}
 #chatBox{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:10px}
-.msg{background:#111;padding:10px;border-radius:10px;max-width:80%}
+.msg{background:#111;padding:12px;border-radius:12px;max-width:85%}
 .user{align-self:flex-end;background:#a855f7;color:#000}
-.bot{align-self:flex-start;border-left:3px solid #a855f7}
-#loading{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;justify-content:center;align-items:center;z-index:999}
-.spinner{border:4px solid #111;border-top:4px solid #a855f7;border-radius:50%;width:50px;height:50px;animation:spin 1s linear infinite}
-@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-.input-area{display:flex;padding:10px;gap:10px}
+.bot{align-self:flex-start;border-left:4px solid #a855f7}
+.input-area{display:flex;padding:10px;gap:10px;border-top:1px solid #a855f7}
 #userInput{flex:1;margin:0}
 .send-btn{width:80px;margin:0}
+.key-area{display:flex;padding:10px;gap:5px;border-bottom:1px solid #a855f7}
+#apiKeyInput{flex:1;margin:0}
+#loading{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:flex;justify-content:center;align-items:center;z-index:999;flex-direction:column}
+.spinner{border:4px solid #111;border-top:4px solid #a855f7;border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<div id="loading"><div class="spinner"></div></div>
+<div id="loading"><div class="spinner"></div><p style="margin-top:15px;color:#a855f7">Omega-Pro Booting...</p></div>
 
+<!-- LOGIN SCREEN -->
 <div class="screen" id="loginScreen">
-  <h1>⚡ Omega-Pro Login</h1>
+  <h1>⚡ Omega-Pro SUPER v5.0</h1>
   <input type="text" id="username" placeholder="Username">
   <input type="password" id="password" placeholder="Password">
   <button onclick="login()">Login</button>
 </div>
 
+<!-- DASHBOARD -->
 <div class="screen" id="dashboardScreen">
-  <h1>📊 Dashboard</h1>
-  <p style="text-align:center;color:#aaa">Welcome to Omega-Pro v4.0</p>
-  <button onclick="showScreen('chatScreen')">Chat with AI</button>
-  <button onclick="showScreen('paymentScreen')">💳 Upgrade Pro - $5</button>
-  <button onclick="logout()">Logout</button>
+  <h1>📊 Super Dashboard</h1>
+  <p style="text-align:center;color:#aaa;margin-bottom:10px">All Features Unlocked</p>
+  <button onclick="showScreen('chatScreen')">💬 AI Chat + Image</button>
+  <button onclick="showScreen('paymentScreen')">💳 Pro Upgrade $5</button>
+  <button onclick="logout()">🚪 Logout</button>
 </div>
 
+<!-- PAYMENT -->
 <div class="screen" id="paymentScreen">
-  <h1>💳 Payment</h1>
-  <input type="text" placeholder="Card Number">
+  <h1>💳 Upgrade to Pro</h1>
+  <input type="text" placeholder="Card Number 1234 5678">
   <input type="text" placeholder="MM/YY">
   <input type="text" placeholder="CVV">
   <button onclick="pay()">Pay $5 Now</button>
   <button onclick="showScreen('dashboardScreen')">Back</button>
 </div>
 
+<!-- CHAT SCREEN - SUPER AI -->
 <div class="screen" id="chatScreen">
-  <h1>⚡ Omega-Pro AI v4.0</h1>
-  <input type="password" id="apiKeyInput" placeholder="Apni Groq Key yahan paste karo" style="margin-bottom:0">
-  <button onclick="saveKey()" style="padding:10px;margin-top:5px">Save Key</button>
+  <h1>⚡ Super AI Chat</h1>
+  <div class="key-area">
+    <input type="password" id="apiKeyInput" placeholder="Apni Groq Key paste karo">
+    <button onclick="saveKey()" style="width:80px;margin:0">Save</button>
+  </div>
   <div id="chatBox"></div>
   <div class="input-area">
-    <input type="text" id="userInput" placeholder="Message bhejo... 'image of dragon'">
+    <input type="text" id="userInput" placeholder="Kuch bhi poocho... 'image of cat'">
     <button class="send-btn" onclick="sendMessage()">Send</button>
   </div>
 </div>
 
 <script>
 let API_KEY = localStorage.getItem("groq_key");
+if(API_KEY) document.getElementById("apiKeyInput").value = API_KEY;
 
 setTimeout(()=>{
   document.getElementById("loading").style.display="none";
   showScreen("loginScreen");
-},2000);
+},2500);
 
 function showScreen(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
@@ -81,53 +90,52 @@ function login(){
   let u=document.getElementById("username").value;
   let p=document.getElementById("password").value;
   if(u=="user" && p=="1234"){ showScreen("dashboardScreen"); }
-  else{ alert("Wrong! Try: user / 1234"); }
+  else{ alert("Wrong! Use: user / 1234"); }
 }
 
 function logout(){ showScreen("loginScreen"); }
 
-function pay(){
-  alert("Payment Successful! Pro Activated");
-  showScreen("dashboardScreen");
-}
+function pay(){ alert("Payment Successful! Pro Activated ✅"); showScreen("dashboardScreen"); }
 
 function saveKey(){
   API_KEY = document.getElementById("apiKeyInput").value;
   localStorage.setItem("groq_key", API_KEY);
-  alert("Key Saved!");
+  alert("Key Saved Successfully!");
 }
 
 async function sendMessage(){
   const input=document.getElementById("userInput");
   const msg=input.value.trim();
   if(!msg) return;
-  if(!API_KEY){ alert("Pehle upar key save karo"); return; }
+  if(!API_KEY){ alert("Pehle upar key save karo bro"); return; }
   addMsg(msg,"user");
   input.value="";
   
+  // IMAGE GENERATION
   if(msg.toLowerCase().startsWith("image of")){
     let prompt=msg.replace("image of","").trim();
-    addMsg(`Image bana raha hun: ${prompt}`,"bot");
+    addMsg(`🎨 Image bana raha hun: ${prompt}`,"bot");
     let img=document.createElement("img");
-    img.src="https://pollinations.ai/p/"+encodeURIComponent(prompt);
-    img.style="width:100%;border-radius:10px;margin-top:5px";
+    img.src="https://pollinations.ai/p/"+encodeURIComponent(prompt)+"?width=512&height=512";
+    img.style="width:100%;border-radius:12px;margin-top:8px;border:1px solid #a855f7";
     document.getElementById("chatBox").appendChild(img);
     return;
   }
   
-  addMsg("Soch raha hun...","bot");
+  // AI CHAT
+  addMsg("🤔 Soch raha hun...","bot");
   try{
     let res=await fetch("https://api.groq.com/openai/v1/chat/completions",{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":`Bearer ${API_KEY}`},
-      body:JSON.stringify({model:"llama3-8b-8192",messages:[{role:"user",content:msg}]})
+      body:JSON.stringify({model:"llama-3.1-8b-instant",messages:[{role:"user",content:msg}]})
     });
     let data=await res.json();
-    document.querySelector("#chatBox.bot:last-child").remove();
+    document.querySelectorAll("#chatBox.bot:last-child").forEach(e=>e.remove());
     addMsg(data.choices[0].message.content,"bot");
   }catch(e){
-    document.querySelector("#chatBox.bot:last-child").remove();
-    addMsg("Error aa gaya bro. Key check karo","bot");
+    document.querySelectorAll("#chatBox.bot:last-child").forEach(e=>e.remove());
+    addMsg("❌ Error: Key check karo ya net issue hai","bot");
   }
 }
 
