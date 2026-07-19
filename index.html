@@ -115,12 +115,10 @@
   </div>
 
 <script>
-// ============ SETTINGS ============
-let API_KEY = prompt("Apni Groq Key yahan paste karo:"); // Ye line nayi add ki
+let API_KEY = localStorage.getItem("groq_key");
+if(!API_KEY){ API_KEY = prompt("Apni Groq Key yahan paste karo:\ngsk_..."); localStorage.setItem("groq_key", API_KEY); }
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const IMAGE_URL = "https://pollinations.ai/p/";
-// ===================================
-
   let chatHistory = [
     { role: "system", content: "You are Omega-Pro AI v2.0. You are helpful, smart, and talk in Urdu/English mix. Be friendly." }
   ];
