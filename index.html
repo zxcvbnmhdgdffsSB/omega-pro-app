@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Omega-Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#7c3aed">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Arial;background:#000;color:#fff}
+    .loading{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#7c3aed,#000)}
+    .bounce{font-size:100px;animation:bounce 1s infinite}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+    .app{padding:15px;height:100vh;display:flex;flex-direction:column}
+    .chat{flex:1;overflow-y:auto;margin:10px 0}
+    .msg{margin:8px 0;padding:10px;border-radius:10px;max-width:80%}
+    .you{background:#7c3aed;margin-left:auto}
+    .ai{background:#222}
+    .input-area{display:flex;gap:8px}
+    input{flex:1;padding:12px;border-radius:12px;border:none;background:#222;color:#fff}
+    button{padding:12px 16px;border:none;border-radius:12px;background:#7c3aed;color:#fff;font-weight:bold}
+    .img-btn{background:#ec4899}
+    img{max-width:300px;border-radius:12px;margin:5px 0}
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">
+    <div class="bounce">⚡</div>
+    <h1>Omega-Pro</h1>
+    <p>AI is waking up...</p>
+  </div>
+  
+  <div class="app" id="app" style="display:none">
+    <h2 style="text-align:center">⚡ Omega-Pro</h2>
+    <div class="chat" id="chat"></div>
+    <div class="input-area">
+      <input id="inp" placeholder="Type here...">
+      <button onclick="send()">Send</button>
+      <button class="img-btn" onclick="img()">🖼️</button>
+    </div>
+  </div>
+
+<script>
+  setTimeout(()=>{
+    document.getElementById('loading').style.display='none';
+    document.getElementById('app').style.display='flex'
+  },3000)
+  
+  function send(){
+    let t=document.getElementById('inp').value
+    if(!t) return
+    document.getElementById('chat').innerHTML += `<div class="msg you">You: ${t}</div><div class="msg ai">AI: Omega: ${t}</div>`
+    document.getElementById('inp').value=''
+  }
+  function img(){
+    let t=document.getElementById('inp').value
+    if(!t) return
+    document.getElementById('chat').innerHTML += `<div class="msg you">Image: ${t}</div><img src="https://image.pollinations.ai/prompt/${encodeURIComponent(t)}">`
+  }
+</script>
+</body>
+    </html>
