@@ -61,8 +61,33 @@
     let t=document.getElementById('inp').value
     if(!t) return
     document.getElementById('chat').innerHTML += `<div class="msg you">Image: ${t}</div><img src="https://image.pollinations.ai/prompt/${encodeURIComponent(t)}">`
+  }let deferredPrompt;
+const installBtn = document.getElementById('installBtn');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'block';
+});
+
+installBtn.addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') installBtn.style.display = 'none';
+    deferredPrompt = null;
   }
-</script>
-</body>
-  </html>
-  
+});
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js');
+  }
+84 }
+85 <button id="installBtn" style="display:none; margin:10px; width:calc(100% - 20px); padding:14px; background:#9333ea; color:white; border:none; border-radius:12px; font-size:16px; font-weight:bold;">
+86   📲 Install Omega-Pro App
+87 </button>
+88 </script>
+89 </body>
+90 </html>
+
+        
