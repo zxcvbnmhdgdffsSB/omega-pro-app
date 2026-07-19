@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Omega-Pro SUPER AI v5.1</title>
+<title>Omega-Pro SUPER AI v5.2</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
 body{background:#000;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh}
@@ -31,15 +31,13 @@ button:hover{opacity:0.8}
 
 <div id="loading"><div class="spinner"></div><p style="margin-top:15px;color:#a855f7">Omega-Pro Booting...</p></div>
 
-<!-- LOGIN SCREEN -->
 <div class="screen" id="loginScreen">
-  <h1>⚡ Omega-Pro SUPER v5.1</h1>
+  <h1>⚡ Omega-Pro SUPER v5.2</h1>
   <input type="text" id="username" placeholder="Username">
   <input type="password" id="password" placeholder="Password">
   <button onclick="login()">Login</button>
 </div>
 
-<!-- DASHBOARD -->
 <div class="screen" id="dashboardScreen">
   <h1>📊 Super Dashboard</h1>
   <p style="text-align:center;color:#aaa;margin-bottom:10px">All Features Unlocked</p>
@@ -48,7 +46,6 @@ button:hover{opacity:0.8}
   <button onclick="logout()">🚪 Logout</button>
 </div>
 
-<!-- PAYMENT -->
 <div class="screen" id="paymentScreen">
   <h1>💳 Upgrade to Pro</h1>
   <input type="text" placeholder="Card Number 1234 5678">
@@ -58,7 +55,6 @@ button:hover{opacity:0.8}
   <button onclick="showScreen('dashboardScreen')">Back</button>
 </div>
 
-<!-- CHAT SCREEN - SUPER AI -->
 <div class="screen" id="chatScreen">
   <h1>⚡ Super AI Chat</h1>
   <div class="key-area" id="keyArea">
@@ -75,21 +71,23 @@ button:hover{opacity:0.8}
 <script>
 let API_KEY = localStorage.getItem("groq_key");
 
-setTimeout(()=>{
-  document.getElementById("loading").style.display="none";
-  showScreen("loginScreen");
-},2500);
+// FIXED: Page load hote hi loading hatayega
+window.onload = function(){
+  setTimeout(()=>{
+    document.getElementById("loading").style.display="none";
+    showScreen("loginScreen");
+  },2500);
+}
 
 function showScreen(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 
-  // CHAT SCREEN KHOLE TO KEY CHECK KARO
   if(id === "chatScreen"){
     if(API_KEY){
-      document.getElementById("keyArea").style.display = "none"; // KEY BOX GAYAB
+      document.getElementById("keyArea").style.display = "none";
     } else {
-      document.getElementById("keyArea").style.display = "flex"; // KEY BOX SHOW
+      document.getElementById("keyArea").style.display = "flex";
     }
   }
 }
@@ -109,7 +107,7 @@ function saveKey(){
   API_KEY = document.getElementById("apiKeyInput").value;
   if(!API_KEY){ alert("Key khali hai"); return; }
   localStorage.setItem("groq_key", API_KEY);
-  document.getElementById("keyArea").style.display = "none"; // SAVE HOTE HI GAYAB
+  document.getElementById("keyArea").style.display = "none";
   alert("Key Saved Successfully! ✅");
 }
 
@@ -121,7 +119,6 @@ async function sendMessage(){
   addMsg(msg,"user");
   input.value="";
 
-  // IMAGE GENERATION
   if(msg.toLowerCase().startsWith("image of")){
     let prompt=msg.replace("image of","").trim();
     addMsg(`🎨 Image bana raha hun: ${prompt}`,"bot");
@@ -132,7 +129,6 @@ async function sendMessage(){
     return;
   }
 
-  // AI CHAT
   addMsg("🤔 Soch raha hun...","bot");
   try{
     let res=await fetch("https://api.groq.com/openai/v1/chat/completions",{
@@ -145,4 +141,21 @@ async function sendMessage(){
     addMsg(data.choices[0].message.content,"bot");
   }catch(e){
     document.querySelectorAll("#chatBox.bot:last-child").forEach(e=>e.remove());
-    addMsg("❌ Error: Key ghalat hai ya net
+    addMsg("❌ Error: Key ghalat hai ya net issue hai","bot");
+  }
+}
+
+function addMsg(text,type){
+  let div=document.createElement("div");
+  div.className=`msg ${type}`;
+  div.innerText=text;
+  document.getElementById("chatBox").appendChild(div);
+  document.getElementById("chatBox").scrollTop=chatBox.scrollHeight;
+}
+
+document.getElementById("userInput").addEventListener("keypress", e => {
+  if (e.key === "Enter") sendMessage();
+});
+</script>
+</body>
+  </html>
